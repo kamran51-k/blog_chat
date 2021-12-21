@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models.base import Model
-from django.db.models.fields import CharField
+from django.db.models.fields import CharField, related
 from django.contrib.auth import get_user_model
 
 # Create your models here.
@@ -12,13 +12,29 @@ class NavbarModel(models.Model):
     url = models.URLField(null=True,blank=True)
     navbar_logo = models.CharField(max_length=100,null=True, blank=True)
 
+CATEGORY_CHOICES = (
+    ("Personal Post", "Personal Post"),
+    ("Visual Designs", "Visual Designs"),
+    ("Travel Events", "Travel Events"),
+    ("Web Development", "Web Development"),
+    ("Video and Audio", "Video and Audio"),
+    # ("6", "6"),
+    # ("7", "7"),
+    # ("8", "8"),
+)
+  
 class PostModel(models.Model):
     username = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
     title = models.CharField(max_length=100,null=True,blank=True)
     text = models.CharField(max_length=300,null=True,blank=True)
     video = models.FileField(upload_to='videos_uploaded',null=True,blank=True)
-    image = models.ImageField(upload_to='images_uploaded',null=True,blank=True)
-    category = models.CharField(max_length=100,null=True,blank=True)
+    image = models.ImageField(upload_to='images_uploaded',null=True,blank=True)  
+    category = models.CharField(
+        max_length = 20,
+        choices = CATEGORY_CHOICES,
+        default = 'Personal Post',
+        null=True,blank=True
+        )
     date = models.DateField(auto_now=True)
 
 class LogoModel(models.Model):
@@ -39,8 +55,6 @@ class ContactModel(models.Model):
     email = models.EmailField()
     subject = models.CharField(max_length=100)
     message = models.CharField(max_length=1000)
-
-    
 
 class ContactModel2(models.Model):
     adreess = models.CharField(max_length=100,null=True, blank=True)
