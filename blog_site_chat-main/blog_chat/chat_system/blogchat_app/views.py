@@ -117,7 +117,7 @@ def contact_view(request):
 def my_blog_view(request):
 
     context = {}
-    my_blog_queryset = PostModel.objects.all()
+    my_blog_queryset = PostModel.objects.filter()
     context['my_blog_queryset'] = my_blog_queryset
 
     
