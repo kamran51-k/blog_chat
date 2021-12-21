@@ -1,3 +1,4 @@
+from typing import Text
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.http import request
 from django.shortcuts import render,redirect,get_object_or_404
@@ -9,7 +10,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm 
 from django.contrib.auth.decorators import login_required
 from django.views.generic.detail import DetailView
-  
+from django.db.models import Q
 # Create your views here.
 
 @login_required(login_url = 'login_page')
@@ -127,7 +128,10 @@ def edit_profile_view(request):
 
     return render(request,'edit_profile.html',context)
 
-def comment_reply(request):
-    context = {}
-
-    return render(request,'comment_reply.html',context)
+def searchbar(request):
+    if request.method == 'GET':
+        context = {}
+        search = request.GET.get('search')
+        post = PostModel.objects.filter(Q(title__icontains=search) | Q(text__icontains=search))
+        context['post'] = post
+        return render(request,'searchbar.html',context)

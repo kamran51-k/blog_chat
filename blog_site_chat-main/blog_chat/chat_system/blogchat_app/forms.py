@@ -21,7 +21,10 @@ class RegisterForm(UserCreationForm):
 
 
 class CommentForm(forms.ModelForm):
-    content = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control col-md-10 col-lg-10','rows' : 15}), label="Text")  
+    
     class Meta:
         model = Comment
         fields = ('content',)
+        widgets = {
+            'content': forms.Textarea(attrs={'rows':3, 'cols':15}),
+        }

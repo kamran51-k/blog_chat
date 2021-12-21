@@ -1,0 +1,45 @@
+{%extends 'base.html' %}
+{% load static %}
+{%block content%}
+
+{{ error }}
+
+{%if post %}
+<div class="container-fluid">
+    <main class="tm-main">
+        <!-- Search form -->
+        <div class="row tm-row">
+            <div class="col-12">
+                <form  action = "{% url 'searchbar' %}" method="GET" class="form-inline tm-mb-80 tm-search-form">                
+                    <input class="form-control tm-search-input" name="search" type="text" placeholder="Search..." aria-label="Search">
+                    <button class="tm-search-button" type="submit">
+                        <i class="fas fa-search tm-search-icon" aria-hidden="true"></i>
+                    </button>                                
+                </form>
+            </div>                
+        </div>            
+<center><h1>Search Result Found</h1></center>
+<br>
+
+{%for i in post %}
+<center><h2><a href="{% url 'detail_page' post_id=i.id %}">{{i.title}} : {{i.text}} <img src="{{i.image.url}}" alt="" height="500" width="500"></a></h2></center>
+
+{%endfor%}
+    {%else%}
+    <div class="container-fluid">
+        <main class="tm-main">
+            <!-- Search form -->
+            <div class="row tm-row">
+                <div class="col-12">
+                    <form  action = "{% url 'searchbar' %}" method="GET" class="form-inline tm-mb-80 tm-search-form">                
+                        <input class="form-control tm-search-input" name="search" type="text" placeholder="Search..." aria-label="Search">
+                        <button class="tm-search-button" type="submit">
+                            <i class="fas fa-search tm-search-icon" aria-hidden="true"></i>
+                        </button>                                
+                    </form>
+                </div>                
+            </div>            
+    <center><h1>Nothing Found Bitch</h1></center>
+{%endif%}
+
+{%endblock%}
