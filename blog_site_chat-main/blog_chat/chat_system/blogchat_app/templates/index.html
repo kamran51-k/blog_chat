@@ -30,12 +30,18 @@
                         {{post.text|truncatechars:20}}
                     </p>
                     <div class="d-flex justify-content-between tm-pt-45">
-                        <span class="tm-color-primary">{{post.category}}</span>
+                        <span class="tm-color-primary">{{post.category1}}</span>
                         <span class="tm-color-primary">{{post.date}}</span>
                     </div>
                     <hr>
                     <div class="d-flex justify-content-between">
-                        <span>36 comments</span>
+                        {%if post.comments.count == 1%}
+                        <span>comments</span>
+                        {%elif post.comments.count == 0%}
+                        <span> No comments</span>
+                        {%else%}
+                        <span> {{post.comments.count}} comments</span>
+                        {%endif%}
                         <span>by {{post.username}}</span>
                     </div>
                 </article>

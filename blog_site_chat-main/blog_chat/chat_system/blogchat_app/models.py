@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models.base import Model
 from django.db.models.fields import CharField, related
 from django.contrib.auth import get_user_model
+from django.utils.html import TRAILING_PUNCTUATION_CHARS
 
 # Create your models here.
 
@@ -12,29 +13,19 @@ class NavbarModel(models.Model):
     url = models.URLField(null=True,blank=True)
     navbar_logo = models.CharField(max_length=100,null=True, blank=True)
 
-CATEGORY_CHOICES = (
-    ("Personal Post", "Personal Post"),
-    ("Visual Designs", "Visual Designs"),
-    ("Travel Events", "Travel Events"),
-    ("Web Development", "Web Development"),
-    ("Video and Audio", "Video and Audio"),
-    # ("6", "6"),
-    # ("7", "7"),
-    # ("8", "8"),
-)
-  
+class CategoryModel(models.Model):
+    category = models.CharField(max_length=100,null=True,blank=True)
+    
+    def __str__(self):
+        return f"{self.category}"
+
 class PostModel(models.Model):
     username = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
     title = models.CharField(max_length=100,null=True,blank=True)
     text = models.CharField(max_length=300,null=True,blank=True)
     video = models.FileField(upload_to='videos_uploaded',null=True,blank=True)
     image = models.ImageField(upload_to='images_uploaded',null=True,blank=True)  
-    category = models.CharField(
-        max_length = 20,
-        choices = CATEGORY_CHOICES,
-        default = 'Personal Post',
-        null=True,blank=True
-        )
+    category1 = models.ForeignKey('CategoryModel',models.CASCADE,null=True,blank=True)
     date = models.DateField(auto_now=True)
 
 class LogoModel(models.Model):
@@ -66,7 +57,7 @@ class ContactModel2(models.Model):
 class Comment(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
     content = models.TextField()
-    post = models.ForeignKey(PostModel, on_delete=models.CASCADE)
+    post = models.ForeignKey(PostModel, on_delete=models.CASCADE,related_name='comments')
     created = models.DateTimeField(auto_now_add=True)
     reply_to = models.ForeignKey('self',on_delete=models.CASCADE,related_name='replies',null=True,blank=True)
          
@@ -84,3 +75,7 @@ class Comment(models.Model):
         if self.reply_to is not None:
             return False
         return True
+class ProfileModel(models.Model):
+    first_name = models.CharField(max_length=100,null=True,blank=True)
+    last_name = models.CharField(max_length=100,null=True,blank=True)
+    email = models.EmailField()

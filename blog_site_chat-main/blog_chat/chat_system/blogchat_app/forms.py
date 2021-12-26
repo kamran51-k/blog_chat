@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Comment
+from django.db.models import fields
+from .models import Comment, ProfileModel
+from blogchat_app import models
 
 # Create your forms here.
 
@@ -28,3 +30,8 @@ class CommentForm(forms.ModelForm):
         widgets = {
             'content': forms.Textarea(attrs={'rows':3, 'cols':15}),
         }
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = ProfileModel
+        fields = ('first_name','last_name','email')

@@ -4,7 +4,7 @@ from django.http import request
 from django.shortcuts import render,redirect,get_object_or_404
 
 from blogchat_app.models import  PostModel, AboutModel,ContactModel,Comment
-from .forms import RegisterForm,CommentForm
+from .forms import ProfileForm, RegisterForm,CommentForm
 from django.contrib.auth import login,authenticate,logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm 
@@ -118,15 +118,21 @@ def contact_view(request):
 def my_blog_view(request):
 
     context = {}
-    my_blog_queryset = PostModel.objects.filter()
+    my_blog_queryset = PostModel.objects.filter(username_id=request.user.id)
     context['my_blog_queryset'] = my_blog_queryset
 
-    
     return render(request,'my_blog.html',context)
 def edit_profile_view(request):
     context = {}
-
-    return render(request,'edit_profile.html',context)
+    if request.method == 'POST':
+        form = ProfileForm(request.POST)
+        if form.is_valid():
+            profile = form.save()
+            return redirect('edit_profile.html')
+    else:
+        form = ProfileForm()
+        context['profile_form']=form
+    return render(request, 'edit_profile.html',)
 
 def searchbar(request):
     if request.method == 'GET':
