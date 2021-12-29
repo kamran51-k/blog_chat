@@ -2,7 +2,6 @@ from typing import Text
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.http import request
 from django.shortcuts import render,redirect,get_object_or_404
-
 from blogchat_app.models import  PostModel, AboutModel,ContactModel,Comment
 from .forms import ProfileForm, RegisterForm,CommentForm
 from django.contrib.auth import login,authenticate,logout
@@ -141,3 +140,23 @@ def searchbar(request):
         post = PostModel.objects.filter(Q(title__icontains=search) | Q(text__icontains=search))
         context['post'] = post
         return render(request,'searchbar.html',context)
+
+def archive_view(request): 
+    arch = PostModel.objects.dates('date', 'month', order='DESC') 
+
+    archives = {} 
+    for i in arch: 
+        tp = i.timetuple() 
+        year = tp[0] 
+        month = tp[1] 
+        if year not in archives: 
+            archives[year] = [] 
+            archives[year].append(month) 
+        else: 
+            if month not in archives[year]: 
+                archives[year].append(month)
+    print(archives,"jhffjkakehha") 
+    return render(request,'archive.html', {'archives':archives}) 
+
+def post_archive_view():
+    return 
