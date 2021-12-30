@@ -3,6 +3,7 @@ from django.db.models.base import Model
 from django.db.models.fields import CharField, related
 from django.contrib.auth import get_user_model
 from django.utils.html import TRAILING_PUNCTUATION_CHARS
+from datetime import datetime
 
 # Create your models here.
 
@@ -79,3 +80,11 @@ class ProfileModel(models.Model):
     first_name = models.CharField(max_length=100,null=True,blank=True)
     last_name = models.CharField(max_length=100,null=True,blank=True)
     email = models.EmailField()
+
+class Room(models.Model):
+    name = models.CharField(max_length=1000)
+class Message(models.Model):
+    value = models.CharField(max_length=1000000)
+    date = models.DateTimeField(default=datetime.now, blank=True)
+    user = models.CharField(max_length=1000000)
+    room = models.CharField(max_length=1000000)

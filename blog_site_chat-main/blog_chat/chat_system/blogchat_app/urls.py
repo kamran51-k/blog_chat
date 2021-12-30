@@ -1,6 +1,6 @@
 from os import name
 from django.urls import path
-from .views import about_view,index_view, contact_view, my_blog_view,register_request,login_request,logout_request,edit_profile_view,post_detail_view, searchbar,archive_view,post_archive_view
+from .views import about_view,index_view, contact_view, my_blog_view,register_request,login_request,logout_request,edit_profile_view,post_detail_view, searchbar,archive_view,post_archive_view,room_view,check_view,send_view,getMessages_views,chathome_view
 
 urlpatterns = [
     path('',index_view,name='index_page'),
@@ -14,6 +14,10 @@ urlpatterns = [
     path('my-blogs',my_blog_view,name='my_blog_page'),
     path('searchbar',searchbar,name='searchbar'),
     path('archive',archive_view,name='archive_page'),
-    path('archive/<int:years>/<int:month>/', post_archive_view, name='post_archive_page')
-
+    path('archive/<int:years>/<int:month>/', post_archive_view, name='post_archive_page'),
+    path('chathome',chathome_view, name='chathome'),
+    path('<str:room>/',room_view, name='room'),
+    path('checkview',check_view, name='checkview'),
+    path('send', send_view, name='send'),
+    path('getMessages/<str:room>/', getMessages_views, name='getMessages'),
 ]
