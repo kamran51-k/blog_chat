@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+</head>
+<body>
+    <div class="container-fluid">
+        <main class="tm-main">
+            <!-- Search form -->
+            <div class="row tm-row">
+                <div class="col-12">
+                    <form  action = "{% url 'searchbar' %}" method="GET" class="form-inline tm-mb-80 tm-search-form">                
+                        <input class="form-control tm-search-input" name="search" type="text" placeholder="Search..." aria-label="Search">
+                        <button class="tm-search-button" type="submit">
+                            <i class="fas fa-search tm-search-icon" aria-hidden="true"></i>
+                        </button>                                
+                    </form>
+                </div>                
+            </div>            
+        <!-- Page Header-->
+        <header class="masthead" style="background-image:''">
+            <div class="container position-relative px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="site-heading">
+                            <h1> </h1>
+                            <span class="subheading"> </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+
+    <form method="POST" action="{% url 'post_create_page' %}">
+        {{form.as_p}}
+        {% csrf_token %}
+        <input type="submit" value="Save Post">
+    </form>
+
+
+{% endblock %}

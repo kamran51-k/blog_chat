@@ -1,6 +1,6 @@
 from os import name
 from django.urls import path
-from .views import about_view,index_view, contact_view, my_blog_view,register_request,login_request,logout_request,edit_profile_view,post_detail_view, searchbar,archive_view,post_archive_view,room_view,check_view,send_view,getMessages_views,chathome_view
+from .views import about_view,index_view, contact_view, my_blog_view,register_request,login_request,logout_request,edit_profile_view,post_detail_view, searchbar,archive_view,post_archive_view,room_view,chathome_view,post_create_view,check_view,getMessages_views,send_view
 
 urlpatterns = [
     path('',index_view,name='index_page'),
@@ -15,9 +15,11 @@ urlpatterns = [
     path('searchbar',searchbar,name='searchbar'),
     path('archive',archive_view,name='archive_page'),
     path('archive/<int:years>/<int:month>/', post_archive_view, name='post_archive_page'),
-    path('chathome',chathome_view, name='chathome'),
-    path('<str:room>/',room_view, name='room'),
-    path('checkview',check_view, name='checkview'),
+    path("post-create/", post_create_view, name = 'post_create_page'),
+    path('chat-home', chathome_view, name='home'),
+    path('<str:room>/', room_view, name='room'),
+    path('checkview', check_view, name='checkview'),
     path('send', send_view, name='send'),
-    path('getMessages/<str:room>/', getMessages_views, name='getMessages'),
+    path('getMessages/<str:room>/', getMessages_views, name='getMessages'),    
+
 ]

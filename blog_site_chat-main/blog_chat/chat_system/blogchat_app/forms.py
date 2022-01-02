@@ -2,8 +2,9 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.db.models import fields
-from .models import Comment, ProfileModel
+from .models import Comment, PostModel, ProfileModel
 from blogchat_app import models
+from django.contrib.auth import get_user_model
 
 # Create your forms here.
 
@@ -35,3 +36,8 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = ProfileModel
         fields = ('first_name','last_name','email')
+
+class PostCreateForm(forms.ModelForm):
+    class Meta:
+        model = PostModel
+        exclude = ['date', 'username']

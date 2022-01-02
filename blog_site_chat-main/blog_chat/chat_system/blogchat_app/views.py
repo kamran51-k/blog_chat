@@ -2,7 +2,7 @@ from typing import Text
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.http import request
 from django.shortcuts import render,redirect,get_object_or_404
-from blogchat_app.models import  PostModel, AboutModel,ContactModel,Comment
+from blogchat_app.models import  PostModel, AboutModel,ContactModel,Comment, Message,Room
 from .forms import ProfileForm, RegisterForm,CommentForm
 from django.contrib.auth import login,authenticate,logout
 from django.contrib import messages
@@ -12,8 +12,12 @@ from django.views.generic.detail import DetailView
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
-from blogchat_app.models import Room, Message
+from .forms import  PostCreateForm
+from django.contrib.auth import get_user_model, authenticate, login 
+
+
 # Create your views here.
+User = get_user_model
 
 @login_required(login_url = 'login_page')
 # def base_view(request):
@@ -203,3 +207,20 @@ def getMessages_views(request, room):
 
     messages = Message.objects.filter(room=room_details.id)
     return JsonResponse({"messages":list(messages.values())})
+
+def post_create_view(request):
+    context = {}
+    form = PostCreateForm()
+    if request.method == 'POST':
+        form = PostCreateForm(request.POST)
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.username = request.user
+            form.save()
+            return redirect('index_page')
+        else:
+            context['form'] = form
+            return render(request, 'post_create.html',context)
+
+    context['form'] = form
+    return render(request, 'post_create.html',context)    
