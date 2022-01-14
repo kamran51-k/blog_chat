@@ -1,19 +1,7 @@
 {%extends 'base.html' %}
 {% load static %}
 {%block content%}
-    <div class="container-fluid">
-        <main class="tm-main">
-            <!-- Search form -->
-            <div class="row tm-row">
-                <div class="col-12">
-                    <form  action = "{% url 'searchbar' %}" method="GET" class="form-inline tm-mb-80 tm-search-form">                
-                        <input class="form-control tm-search-input" name="search" type="text" placeholder="Search..." aria-label="Search">
-                        <button class="tm-search-button" type="submit">
-                            <i class="fas fa-search tm-search-icon" aria-hidden="true"></i>
-                        </button>                                
-                    </form>
-                </div>                
-            </div>            
+
             <div class="row tm-row">
                 {%for post in my_blog_queryset%}
                 <article class="col-12 col-md-6 tm-post">
@@ -35,10 +23,21 @@
                     </div>
                     <hr>
                     <div class="d-flex justify-content-between">
-                        <span>36 comments</span>
+                        {%if post.comments.count == 1%}
+                        <span>comments</span>
+                        {%elif post.comments.count == 0%}
+                        <span> No comments</span>
+                        {%else%}
+                        <span> {{post.comments.count}} comments</span>
+                        {%endif%}
                         <span>by {{post.username}}</span>
                     </div>
                 </article>
+                <td>
+                     <small><a href="{% url 'update_post' post.pk %}"> 
+ 		  Edit </a></small>
+                <a href="/delete/{{ post.id }}"class="pt-2 tm-mb-40 tm-color-primary tm-post-title">Delete</a>
+                </td>
                 {%endfor%}
             </div>
             <div class="row tm-row tm-mt-100 tm-mb-75">

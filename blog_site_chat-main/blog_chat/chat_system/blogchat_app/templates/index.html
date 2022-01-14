@@ -1,26 +1,14 @@
 {%extends 'base.html' %}
 {% load static %}
 {%block content%}
-    <div class="container-fluid">
-        <main class="tm-main">
-            <!-- Search form -->
+    
             <div class="row tm-row">
-                <div class="col-12">
-                    <form  action = "{% url 'searchbar' %}" method="GET" class="form-inline tm-mb-80 tm-search-form">                
-                        <input class="form-control tm-search-input" name="search" type="text" placeholder="Search..." aria-label="Search">
-                        <button class="tm-search-button" type="submit">
-                            <i class="fas fa-search tm-search-icon" aria-hidden="true"></i>
-                        </button>                                
-                    </form>
-                </div>                
-            </div>            
-            <div class="row tm-row">
-                {%for post in post_queryset%}
+                {%for post in page_obj.object_list%}
                 <article class="col-12 col-md-6 tm-post">
                     <hr class="tm-hr-primary">
                     <a href="{% url 'detail_page' post_id=post.id %}" class="effect-lily tm-post-link tm-pt-60">
                         <div class="tm-post-link-inner">
-                            <img src="" alt="Image" class="img-fluid">                            
+                            <img src="{{post.image.url}}" alt="Image" class="img-fluid">                            
                         </div>
                         <span class="position-absolute tm-new-badge">New</span>
                         <!-- <h2  href="{% url 'detail_page' post_id=post.id %}" class="tm-pt-30 tm-color-primary tm-post-title">{{post.title}}</h2> -->
@@ -49,29 +37,24 @@
             </div>
             <div class="row tm-row tm-mt-100 tm-mb-75">
                 <div class="tm-prev-next-wrapper">
-                    <a href="#" class="mb-2 tm-btn tm-btn-primary tm-prev-next disabled tm-mr-20">Prev</a>
-                    <a href="#" class="mb-2 tm-btn tm-btn-primary tm-prev-next">Next</a>
+                    {%if page_obj.has_previous %} 
+                    <a href="?page={{page_obj.previous_page_number}}" class="mb-2 tm-btn tm-btn-primary tm-prev-next disabled tm-mr-20">Prev</a>
+                    {% endif %}                    
+                    {%if page_obj.has_next %}                    
+                    <a href="?page={{page_obj.next_page_number}}" class="mb-2 tm-btn tm-btn-primary tm-prev-next">Next</a>
+                    {% endif %}                
                 </div>
                 <div class="tm-paging-wrapper">
                     <span class="d-inline-block mr-3">Page</span>
                     <nav class="tm-paging-nav d-inline-block">
                         <ul>
                             <li class="tm-paging-item active">
-                                <a href="#" class="mb-2 tm-btn tm-paging-link">1</a>
-                            </li>
-                            <li class="tm-paging-item">
-                                <a href="#" class="mb-2 tm-btn tm-paging-link">2</a>
-                            </li>
-                            <li class="tm-paging-item">
-                                <a href="#" class="mb-2 tm-btn tm-paging-link">3</a>
-                            </li>
-                            <li class="tm-paging-item">
-                                <a href="#" class="mb-2 tm-btn tm-paging-link">4</a>
+                                <a href="#" class="mb-2 tm-btn tm-paging-link">{{page_obj.number}}</a>
                             </li>
                         </ul>
                     </nav>
                 </div>                
-            </div>            
+            </div>
             <a href="http://localhost:8000/archive" class="mb-2 tm-btn tm-btn-primary tm-prev-next">Archive</a>
             </html>
 {%endblock%}
