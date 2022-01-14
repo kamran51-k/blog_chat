@@ -11,10 +11,13 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic.detail import DetailView
 from django.db.models import Q
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
 from .forms import  PostCreateForm
 from django.contrib.auth import get_user_model, authenticate, login 
-
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.views.generic.edit import UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 User = get_user_model
@@ -31,9 +34,17 @@ User = get_user_model
 # 	return render(request, 'base.html',context)
 
 def index_view(request):
-    context = {}
     post_queryset = PostModel.objects.all()
-    context['post_queryset'] = post_queryset
+    p = Paginator(post_queryset, 2)
+    page_number = request.GET.get('page')
+    try:
+        page_obj = p.get_page(page_number) 
+    except PageNotAnInteger:
+        page_obj = p.page(1)
+    except EmptyPage:
+        page_obj = p.page(p.num_pages)
+    context = {'page_obj': page_obj}
+   
     return render(request, 'index.html',context)
 
 
@@ -150,28 +161,20 @@ def searchbar(request):
         return render(request,'searchbar.html',context)
 
 def archive_view(request): 
-    arch = PostModel.objects.dates('date', 'month', order='DESC') 
-
-    archives = {} 
-    for i in arch: 
-        tp = i.timetuple() 
-        year = tp[0] 
-        month = tp[1] 
-        if year not in archives: 
-            archives[year] = [] 
-            archives[year].append(month) 
-        else: 
-            if month not in archives[year]: 
-                archives[year].append(month)
-    print(archives,"jhffjkakehha") 
-    return render(request,'archive.html', {'archives':archives}) 
+    context = {}
+    archive_queryset = PostModel.objects.all()
+    context['archives'] = archive_queryset
+    return render(request,'archive.html',context) 
 
 def post_archive_view():
     return 
 
 def chathome_view(request):
     return render(request, 'chathome.html')
-
+def destroy_view(request, id):  
+    employee = PostModel.objects.get(id=id)  
+    employee.delete()  
+    return redirect("/my-blogs")
 
 def room_view(request, room):
     username = request.GET.get('username')
@@ -212,7 +215,7 @@ def post_create_view(request):
     context = {}
     form = PostCreateForm()
     if request.method == 'POST':
-        form = PostCreateForm(request.POST)
+        form = PostCreateForm(data=request.POST,files=request.FILES)
         if form.is_valid():
             form = form.save(commit=False)
             form.username = request.user
@@ -224,3 +227,9 @@ def post_create_view(request):
 
     context['form'] = form
     return render(request, 'post_create.html',context)    
+
+class UpdatePostView(UpdateView):
+    model = PostModel
+    template_name = 'update_post.html'
+    exclude = ['date', 'username','video']
+    form_class = PostCreateForm

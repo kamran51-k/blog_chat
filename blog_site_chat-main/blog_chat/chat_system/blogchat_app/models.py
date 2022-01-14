@@ -4,7 +4,7 @@ from django.db.models.fields import CharField, related
 from django.contrib.auth import get_user_model
 from django.utils.html import TRAILING_PUNCTUATION_CHARS
 from datetime import datetime
-
+from django.urls import reverse
 # Create your models here.
 
 User = get_user_model()
@@ -25,9 +25,11 @@ class PostModel(models.Model):
     title = models.CharField(max_length=100,null=True,blank=True)
     text = models.CharField(max_length=300,null=True,blank=True)
     video = models.FileField(upload_to='videos_uploaded',null=True,blank=True)
-    image = models.ImageField(upload_to='images_uploaded',null=True,blank=True)  
+    image = models.ImageField(upload_to='images_uploaded',default='images_uploaded/925667.jpg',null=True,blank=True)  
     category1 = models.ForeignKey('CategoryModel',models.CASCADE,null=True,blank=True)
     date = models.DateField(auto_now=True)
+    def get_absolute_url(self):
+       return reverse("my_blog_page")  
 
 class LogoModel(models.Model):
     logo_image = models.ImageField(upload_to = 'logo_uploaded',null = True, blank = True)

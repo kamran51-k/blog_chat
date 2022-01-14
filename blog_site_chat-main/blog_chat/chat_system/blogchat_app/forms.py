@@ -40,4 +40,4 @@ class ProfileForm(forms.ModelForm):
 class PostCreateForm(forms.ModelForm):
     class Meta:
         model = PostModel
-        exclude = ['date', 'username']
+        exclude = ['date', 'username','video']
